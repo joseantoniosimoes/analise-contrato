@@ -2,76 +2,133 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Análise de Contrato para Empreendedores</title>
+<title>Análise de Contrato com IA</title>
+
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 0;
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:40px;
 }
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 40px 20px;
-  text-align: center;
+
+h1{
+font-size:32px;
+margin-bottom:10px;
 }
-h1 {
-  color: #1e293b;
+
+textarea{
+width:600px;
+height:200px;
+padding:15px;
+border-radius:8px;
+border:none;
+margin-top:20px;
 }
-p {
-  font-size: 18px;
-  color: #334155;
+
+button{
+background:#2563eb;
+color:white;
+padding:14px 26px;
+border:none;
+border-radius:8px;
+font-size:16px;
+margin-top:20px;
+cursor:pointer;
 }
-.box {
-  background: white;
-  padding: 25px;
-  margin-top: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+
+button:hover{
+background:#1d4ed8;
 }
-button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 15px 25px;
-  font-size: 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 20px;
+
+#resultado{
+margin-top:40px;
+max-width:600px;
+background:#1e293b;
+padding:25px;
+border-radius:10px;
+display:none;
 }
-button:hover {
-  background: #1d4ed8;
+
+.alerta{
+color:#ffcc00;
+font-weight:bold;
+font-size:20px;
 }
-.price {
-  font-size: 26px;
-  font-weight: bold;
-  margin-top: 20px;
+
+.comprar{
+margin-top:20px;
+background:#22c55e;
+}
+
+.comprar:hover{
+background:#16a34a;
 }
 </style>
+
 </head>
+
 <body>
 
-<div class="container">
+<h1>Análise Profissional de Contrato com IA</h1>
 
-<h1>Antes de assinar qualquer contrato, descubra se existe risco de prejuízo oculto.</h1>
+<p>Descubra riscos jurídicos antes de assinar qualquer contrato.</p>
 
-<p>Ferramenta para empreendedores que querem evitar multas abusivas e cláusulas perigosas.</p>
+<textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
 
-<div class="box">
-  <p>✔ Classificação de risco (BAIXO / MÉDIO / ALTO)</p>
-  <p>✔ Identificação de multas excessivas</p>
-  <p>✔ Impacto financeiro potencial</p>
-  <p>✔ Explicação clara antes de você assinar</p>
+<button onclick="analisar()">Analisar contrato</button>
 
-  <div class="price">Análise completa por R$ 47</div>
+<div id="resultado">
 
-  <button onclick="alert('Em breve conectaremos ao sistema!')">
-    Analisar meu contrato agora
-  </button>
+<p class="alerta">
+⚠️ Encontramos possíveis riscos neste contrato
+</p>
+
+<p>
+Identificamos cláusulas que podem gerar prejuízo financeiro significativo.
+</p>
+
+<p>
+Este contrato apresenta <b>risco classificado como MÉDIO</b>.
+</p>
+
+<p>
+Para ver o relatório completo com:
+</p>
+
+<ul>
+<li>Explicação jurídica detalhada</li>
+<li>Estimativa de prejuízo</li>
+<li>Como se proteger antes de assinar</li>
+</ul>
+
+<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
+<button class="comprar">
+Desbloquear relatório completo por R$29,90
+</button>
+</a>
+
 </div>
 
-</div>
+<script>
+
+function analisar(){
+
+let texto = document.getElementById("contrato").value
+
+if(texto.length < 50){
+alert("Cole o contrato para análise")
+return
+}
+
+document.getElementById("resultado").style.display = "block"
+
+}
+
+</script>
 
 </body>
 </html>
