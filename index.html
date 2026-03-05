@@ -46,10 +46,29 @@ border-radius:8px;
 border:none;
 padding:15px;
 margin-top:15px;
+background:#1f2937;
+color:white;
 }
 
-input[type=file]{
+.file-upload{
 margin-top:20px;
+}
+
+.file-upload input{
+display:none;
+}
+
+.file-label{
+display:inline-block;
+padding:14px 24px;
+background:#374151;
+border-radius:8px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.file-label:hover{
+background:#1f2937;
 }
 
 button{
@@ -61,10 +80,27 @@ font-size:18px;
 color:white;
 margin-top:25px;
 cursor:pointer;
+transition:0.3s;
 }
 
 button:hover{
 background:#1d4ed8;
+}
+
+#progress{
+width:100%;
+background:#1f2937;
+border-radius:10px;
+margin-top:20px;
+display:none;
+}
+
+#bar{
+height:12px;
+width:0%;
+background:#22c55e;
+border-radius:10px;
+transition:width 0.4s;
 }
 
 #resultado{
@@ -89,7 +125,7 @@ margin-top:25px;
 }
 
 .comprar:hover{
-background:#16a34a;
+background:#15803d;
 }
 
 .beneficios{
@@ -129,17 +165,26 @@ Descubra riscos jurídicos antes de assinar qualquer contrato.
 
 <h2>Envie seu contrato</h2>
 
-<p>Você pode colar o texto ou enviar um PDF.</p>
+<p>Cole o texto ou envie um PDF</p>
 
 <textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
 
-<p>ou envie o arquivo PDF</p>
+<div class="file-upload">
 
+<label class="file-label">
+📄 Escolher arquivo PDF
 <input type="file" id="pdf" accept=".pdf">
+</label>
+
+</div>
 
 <br>
 
 <button onclick="analisar()">Analisar contrato</button>
+
+<div id="progress">
+<div id="bar"></div>
+</div>
 
 <div id="resultado">
 
@@ -218,7 +263,25 @@ return
 
 }
 
+document.getElementById("progress").style.display="block"
+
+let progresso=0
+
+let interval=setInterval(function(){
+
+progresso+=10
+
+document.getElementById("bar").style.width=progresso+"%"
+
+if(progresso>=100){
+
+clearInterval(interval)
+
 document.getElementById("resultado").style.display="block"
+
+}
+
+},200)
 
 }
 
