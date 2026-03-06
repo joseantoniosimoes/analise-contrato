@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br>
 <head>
+
 <meta charset="UTF-8">
 <title>Análise de Contratos com IA</title>
 
@@ -37,8 +38,13 @@ margin-bottom:40px;
 .upload-box{
 background:#020617;
 border:2px dashed #334155;
-padding:50px;
+padding:60px;
 border-radius:14px;
+transition:0.3s;
+}
+
+.upload-box:hover{
+border-color:#22c55e;
 }
 
 .upload-btn{
@@ -78,31 +84,43 @@ background:#16a34a;
 margin-top:30px;
 color:#94a3b8;
 font-size:14px;
+line-height:1.6;
 }
 
 .loading{
 display:none;
-margin-top:30px;
+margin-top:40px;
 }
 
-.spinner{
-border:4px solid #1e293b;
-border-top:4px solid #22c55e;
-border-radius:50%;
-width:40px;
-height:40px;
-animation:spin 1s linear infinite;
-margin:auto;
+.progress{
+width:100%;
+height:10px;
+background:#1e293b;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
 }
 
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
+.progress-bar{
+height:100%;
+width:0%;
+background:#22c55e;
+transition:0.4s;
+}
+
+.ai-steps{
+margin-top:20px;
+text-align:left;
+color:#94a3b8;
+}
+
+.ai-steps p{
+margin:6px 0;
 }
 
 .result{
 display:none;
-margin-top:30px;
+margin-top:40px;
 padding:30px;
 background:#020617;
 border-radius:10px;
@@ -113,21 +131,33 @@ text-align:left;
 .cta{
 margin-top:20px;
 background:#22c55e;
-padding:15px;
-border-radius:8px;
+padding:18px;
+border-radius:10px;
 text-align:center;
 cursor:pointer;
 font-weight:bold;
+font-size:18px;
+transition:0.3s;
+}
+
+.cta:hover{
+background:#16a34a;
+}
+
+.trust{
+margin-top:40px;
+font-size:13px;
+color:#64748b;
 }
 
 footer{
 margin-top:80px;
-text-align:center;
 color:#64748b;
 font-size:13px;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -137,10 +167,10 @@ font-size:13px;
 <h1>Analise qualquer contrato em 30 segundos com IA</h1>
 
 <p class="sub">
-Descubra cláusulas abusivas antes de assinar qualquer contrato.
+Descubra cláusulas abusivas antes de assinar qualquer contrato
 </p>
 
-<div class="upload-box">
+<div class="upload-box" id="dropzone">
 
 <label class="upload-btn">
 ESCOLHER ARQUIVO
@@ -154,38 +184,58 @@ ANALISAR CONTRATO
 </button>
 
 <div class="benefits">
+
 ⚡ Resultado em segundos<br>
 🔒 100% confidencial<br>
-📄 Compatível com qualquer contrato
+📄 Compatível com qualquer contrato<br>
+🤖 Análise feita por Inteligência Artificial
+
+</div>
+
 </div>
 
 <div class="loading" id="loading">
 
-<div class="spinner"></div>
+<h3>IA analisando seu contrato...</h3>
 
-<p style="margin-top:20px;color:#94a3b8">
-Analisando contrato com Inteligência Artificial...
-</p>
+<div class="progress">
+<div class="progress-bar" id="bar"></div>
+</div>
+
+<div class="ai-steps">
+
+<p id="s1">🔍 Detectando cláusulas...</p>
+<p id="s2">⚖ Avaliando risco jurídico...</p>
+<p id="s3">💰 Calculando possível prejuízo...</p>
+<p id="s4">📑 Gerando relatório profissional...</p>
+
+</div>
 
 </div>
 
 <div class="result" id="result">
 
-<h3>Resultado da Análise</h3>
+<h3>Resultado da análise</h3>
 
 <p id="preview"></p>
 
 <div class="cta" onclick="comprar()">
+
 Desbloquear relatório completo
+
 </div>
 
 </div>
+
+<div class="trust">
+
+Mais de 3.000 contratos já analisados com IA.
 
 </div>
 
 <footer>
 
-© 2026 Análise de Contratos com IA  
+© 2026 IA Análise de Contratos  
 Protegendo você contra cláusulas abusivas.
 
 </footer>
@@ -193,6 +243,26 @@ Protegendo você contra cláusulas abusivas.
 </div>
 
 <script>
+
+let progress=0;
+
+function animarBarra(){
+
+let bar=document.getElementById("bar");
+
+let interval=setInterval(()=>{
+
+progress+=5;
+
+bar.style.width=progress+"%";
+
+if(progress>=100){
+clearInterval(interval);
+}
+
+},200);
+
+}
 
 async function enviarContrato(){
 
@@ -204,6 +274,8 @@ return;
 }
 
 document.getElementById("loading").style.display="block";
+
+animarBarra();
 
 let formData=new FormData();
 formData.append("file",file);
