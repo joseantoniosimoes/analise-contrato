@@ -42,12 +42,6 @@ background:#0b132b;
 padding:35px;
 border-radius:12px;
 box-shadow:0 0 40px rgba(0,0,0,0.6);
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 10px 50px rgba(0,0,0,0.8);
 }
 
 .upload-area{
@@ -56,11 +50,6 @@ padding:30px;
 border-radius:10px;
 margin-top:20px;
 cursor:pointer;
-transition:0.3s;
-}
-
-.upload-area:hover{
-background:#08102a;
 }
 
 .file-label{
@@ -71,18 +60,25 @@ color:black;
 border-radius:8px;
 font-weight:bold;
 cursor:pointer;
-transition:0.25s;
 }
 
 .file-label:hover{
 background:#00a8cc;
-transform:scale(0.98);
 }
 
 .file-name{
 margin-top:15px;
 color:#00ff9d;
 font-size:14px;
+}
+
+input{
+margin-top:20px;
+padding:12px;
+border-radius:8px;
+border:none;
+width:80%;
+font-size:16px;
 }
 
 button{
@@ -95,12 +91,6 @@ background:#00ff9d;
 color:black;
 cursor:pointer;
 font-weight:bold;
-transition:0.3s;
-opacity:0.5;
-}
-
-button.active{
-opacity:1;
 }
 
 button:hover{
@@ -131,14 +121,16 @@ background:#00ff9d;
 transition:width 1s;
 }
 
-.trust{
-margin-top:50px;
-font-size:15px;
-color:#9ca3af;
+.resultado{
+display:none;
+margin-top:40px;
+text-align:left;
 }
 
-.trust strong{
-color:#00ff9d;
+.resultado-box{
+background:#0b132b;
+padding:25px;
+border-radius:10px;
 }
 
 .footer{
@@ -150,20 +142,6 @@ color:#9ca3af;
 }
 
 .footer strong{
-color:#00d4ff;
-}
-
-.footer-links{
-margin-top:10px;
-}
-
-.footer-links a{
-color:#9ca3af;
-margin:0 10px;
-text-decoration:none;
-}
-
-.footer-links a:hover{
 color:#00d4ff;
 }
 
@@ -184,6 +162,12 @@ Descubra em segundos se existem cláusulas abusivas no seu contrato.
 
 <h2>Envie seu contrato em PDF</h2>
 
+<input 
+type="text" 
+id="contato" 
+placeholder="Digite seu email ou WhatsApp para receber o relatório"
+/>
+
 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
 
 <label class="file-label">
@@ -194,8 +178,6 @@ ESCOLHER ARQUIVO
 <div id="fileName" class="file-name"></div>
 
 </div>
-
-<br>
 
 <button id="analisarBtn" onclick="enviarContrato()">
 Analisar contrato
@@ -211,15 +193,24 @@ Analisar contrato
 
 </div>
 
-<div class="trust">
 
-✔ <strong>100% confidencial</strong> — seu contrato não é armazenado  
-<br>
-✔ Análise automatizada com IA  
-<br>
-✔ Identificação de cláusulas abusivas  
-<br>
-✔ Relatório claro e objetivo  
+<div id="resultado" class="resultado">
+
+<h2>Resultado da análise</h2>
+
+<div class="resultado-box">
+
+<p><strong>Risco do contrato:</strong> <span id="risco"></span></p>
+
+<p><strong>Resumo:</strong></p>
+
+<p id="resumo"></p>
+
+<div id="mensagemBloqueio" style="color:#facc15;font-weight:bold;margin-top:15px"></div>
+
+<div id="relatorioCompleto" style="margin-top:20px"></div>
+
+</div>
 
 </div>
 
@@ -238,25 +229,13 @@ Tecnologia aplicada à análise jurídica automatizada com Inteligência Artific
 
 © 2026 IA Análise de Contratos — Todos os direitos reservados.
 
-<div class="footer-links">
-
-<a href="#">Termos de Uso</a>
-
-<a href="#">Política de Privacidade</a>
-
-<a href="#">Contato</a>
-
 </div>
-
-</div>
-
 
 
 <script>
 
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("fileName");
-const button = document.getElementById("analisarBtn");
 
 fileInput.addEventListener("change", function(){
 
@@ -272,14 +251,18 @@ return;
 
 fileName.innerText="Arquivo selecionado: "+file.name;
 
-button.classList.add("active");
-
 });
 
 
 async function enviarContrato(){
 
 const file = fileInput.files[0];
+const contato = document.getElementById("contato").value;
+
+if(!contato){
+alert("Digite um email ou WhatsApp.");
+return;
+}
 
 if(!file){
 alert("Selecione um arquivo PDF.");
@@ -297,6 +280,7 @@ progressBar.style.width="20%";
 
 const formData = new FormData();
 formData.append("file",file);
+formData.append("contato",contato);
 
 try{
 
@@ -317,9 +301,24 @@ progressBar.style.width="100%";
 
 loading.style.display="none";
 
-alert("Análise concluída!");
+document.getElementById("resultado").style.display="block";
 
-console.log(data);
+document.getElementById("risco").innerText = data.risco;
+
+document.getElementById("resumo").innerText = data.resumo_preview || "";
+
+if(data.bloqueado){
+
+document.getElementById("mensagemBloqueio").innerText = data.mensagem;
+
+document.getElementById("relatorioCompleto").innerHTML =
+'<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank" style="display:inline-block;margin-top:15px;padding:12px 20px;background:#00ff9d;color:black;border-radius:6px;text-decoration:none;font-weight:bold">Desbloquear relatório completo</a>';
+
+}else{
+
+document.getElementById("relatorioCompleto").innerText = data.relatorio_completo;
+
+}
 
 }catch(error){
 
