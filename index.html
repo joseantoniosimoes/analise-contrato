@@ -7,46 +7,47 @@
 <style>
 
 body{
-font-family: Arial;
-background:#0f172a;
+margin:0;
+font-family:Arial;
+background:#020617;
 color:white;
-text-align:center;
-padding:40px;
 }
 
 .container{
-max-width:700px;
+max-width:900px;
 margin:auto;
+padding:60px 20px;
+text-align:center;
 }
 
 h1{
-font-size:36px;
+font-size:48px;
 margin-bottom:10px;
+background:linear-gradient(90deg,#60a5fa,#22c55e);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .sub{
-color:#cbd5f5;
-margin-bottom:30px;
+color:#94a3b8;
+font-size:18px;
+margin-bottom:40px;
 }
 
 .upload-box{
-border:2px dashed #334155;
-padding:40px;
-border-radius:12px;
 background:#020617;
-}
-
-input[type=file]{
-display:none;
+border:2px dashed #334155;
+padding:50px;
+border-radius:14px;
 }
 
 .upload-btn{
-display:inline-block;
-padding:16px 28px;
 background:#2563eb;
-border-radius:8px;
+padding:18px 32px;
+border-radius:10px;
 cursor:pointer;
 font-weight:bold;
+display:inline-block;
 transition:0.3s;
 }
 
@@ -54,24 +55,76 @@ transition:0.3s;
 background:#1d4ed8;
 }
 
-.benefits{
-margin-top:20px;
-font-size:14px;
-color:#94a3b8;
+input[type=file]{
+display:none;
 }
 
 button{
-margin-top:20px;
-padding:16px 32px;
+margin-top:25px;
+padding:18px 40px;
+font-size:18px;
 background:#22c55e;
 border:none;
-border-radius:8px;
-font-size:18px;
+border-radius:10px;
 cursor:pointer;
+transition:0.3s;
 }
 
 button:hover{
 background:#16a34a;
+}
+
+.benefits{
+margin-top:30px;
+color:#94a3b8;
+font-size:14px;
+}
+
+.loading{
+display:none;
+margin-top:30px;
+}
+
+.spinner{
+border:4px solid #1e293b;
+border-top:4px solid #22c55e;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+.result{
+display:none;
+margin-top:30px;
+padding:30px;
+background:#020617;
+border-radius:10px;
+border:1px solid #334155;
+text-align:left;
+}
+
+.cta{
+margin-top:20px;
+background:#22c55e;
+padding:15px;
+border-radius:8px;
+text-align:center;
+cursor:pointer;
+font-weight:bold;
+}
+
+footer{
+margin-top:80px;
+text-align:center;
+color:#64748b;
+font-size:13px;
 }
 
 </style>
@@ -90,21 +143,52 @@ Descubra cláusulas abusivas antes de assinar qualquer contrato.
 <div class="upload-box">
 
 <label class="upload-btn">
-Escolher Arquivo PDF
+ESCOLHER ARQUIVO
 <input type="file" id="fileInput" accept=".pdf">
 </label>
 
+<br>
+
+<button onclick="enviarContrato()">
+ANALISAR CONTRATO
+</button>
+
 <div class="benefits">
-⚡ Resultado em segundos <br>
-🔒 100% confidencial <br>
+⚡ Resultado em segundos<br>
+🔒 100% confidencial<br>
 📄 Compatível com qualquer contrato
 </div>
 
-<button onclick="enviarContrato()">
-Analisar Contrato
-</button>
+<div class="loading" id="loading">
+
+<div class="spinner"></div>
+
+<p style="margin-top:20px;color:#94a3b8">
+Analisando contrato com Inteligência Artificial...
+</p>
 
 </div>
+
+<div class="result" id="result">
+
+<h3>Resultado da Análise</h3>
+
+<p id="preview"></p>
+
+<div class="cta" onclick="comprar()">
+Desbloquear relatório completo
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+© 2026 Análise de Contratos com IA  
+Protegendo você contra cláusulas abusivas.
+
+</footer>
 
 </div>
 
@@ -115,21 +199,37 @@ async function enviarContrato(){
 let file=document.getElementById("fileInput").files[0];
 
 if(!file){
-alert("Escolha um contrato PDF");
+alert("Selecione um contrato PDF");
 return;
 }
+
+document.getElementById("loading").style.display="block";
 
 let formData=new FormData();
 formData.append("file",file);
 
-let response=await fetch("SUA_EDGE_FUNCTION_AQUI",{
+let response=await fetch(
+"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/gerar-relatorio",
+{
 method:"POST",
 body:formData
 });
 
 let data=await response.json();
 
-alert("Análise concluída!");
+document.getElementById("loading").style.display="none";
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("preview").innerText=data.resumo_preview;
+
+window.relatorioId=data.id;
+
+}
+
+function comprar(){
+
+window.location.href="https://pay.kiwify.com.br/xEno6gD?relatorio="+window.relatorioId;
 
 }
 
