@@ -1,148 +1,130 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>IA Análise de Contratos</title>
+<title>Análise de Contratos com IA</title>
 
 <style>
 
 body{
-font-family:Arial,Helvetica,sans-serif;
-background:#050b18;
-color:white;
 margin:0;
-text-align:center;
+font-family:Arial;
+background:#020617;
+color:white;
 }
 
 .container{
 max-width:900px;
 margin:auto;
-padding:40px 20px;
+padding:60px 20px;
+text-align:center;
 }
 
 h1{
-font-size:42px;
+font-size:48px;
 margin-bottom:10px;
-}
-
-.highlight{
-color:#00d4ff;
+background:linear-gradient(90deg,#60a5fa,#22c55e);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .sub{
+color:#94a3b8;
 font-size:18px;
-color:#a0a0a0;
-margin-bottom:30px;
+margin-bottom:40px;
 }
 
-.card{
-background:#0b132b;
-padding:35px;
-border-radius:12px;
-box-shadow:0 0 40px rgba(0,0,0,0.6);
+.upload-box{
+background:#020617;
+border:2px dashed #334155;
+padding:50px;
+border-radius:14px;
 }
 
-.upload-area{
-border:2px dashed #00d4ff;
-padding:30px;
+.upload-btn{
+background:#2563eb;
+padding:18px 32px;
 border-radius:10px;
-margin-top:20px;
 cursor:pointer;
-}
-
-.file-label{
-display:inline-block;
-padding:14px 26px;
-background:#00d4ff;
-color:black;
-border-radius:8px;
 font-weight:bold;
-cursor:pointer;
+display:inline-block;
+transition:0.3s;
 }
 
-.file-label:hover{
-background:#00a8cc;
+.upload-btn:hover{
+background:#1d4ed8;
 }
 
-.file-name{
-margin-top:15px;
-color:#00ff9d;
-font-size:14px;
-}
-
-input{
-margin-top:20px;
-padding:12px;
-border-radius:8px;
-border:none;
-width:80%;
-font-size:16px;
+input[type=file]{
+display:none;
 }
 
 button{
-margin-top:20px;
-padding:15px 30px;
+margin-top:25px;
+padding:18px 40px;
 font-size:18px;
+background:#22c55e;
 border:none;
+border-radius:10px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+.benefits{
+margin-top:30px;
+color:#94a3b8;
+font-size:14px;
+}
+
+.loading{
+display:none;
+margin-top:30px;
+}
+
+.spinner{
+border:4px solid #1e293b;
+border-top:4px solid #22c55e;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+.result{
+display:none;
+margin-top:30px;
+padding:30px;
+background:#020617;
+border-radius:10px;
+border:1px solid #334155;
+text-align:left;
+}
+
+.cta{
+margin-top:20px;
+background:#22c55e;
+padding:15px;
 border-radius:8px;
-background:#00ff9d;
-color:black;
+text-align:center;
 cursor:pointer;
 font-weight:bold;
 }
 
-button:hover{
-background:#00cc7a;
-}
-
-.loading{
-margin-top:20px;
-display:none;
-color:#00d4ff;
-font-weight:bold;
-}
-
-.progress{
-width:100%;
-height:8px;
-background:#111827;
-border-radius:10px;
-margin-top:20px;
-overflow:hidden;
-display:none;
-}
-
-.progress-bar{
-height:100%;
-width:0%;
-background:#00ff9d;
-transition:width 1s;
-}
-
-.resultado{
-display:none;
-margin-top:40px;
-text-align:left;
-}
-
-.resultado-box{
-background:#0b132b;
-padding:25px;
-border-radius:10px;
-}
-
-.footer{
-margin-top:70px;
-padding:25px;
-font-size:14px;
-background:#020617;
-color:#9ca3af;
-}
-
-.footer strong{
-color:#00d4ff;
+footer{
+margin-top:80px;
+text-align:center;
+color:#64748b;
+font-size:13px;
 }
 
 </style>
@@ -152,183 +134,102 @@ color:#00d4ff;
 
 <div class="container">
 
-<h1>Analise seu contrato com <span class="highlight">Inteligência Artificial</span></h1>
+<h1>Analise qualquer contrato em 30 segundos com IA</h1>
 
 <p class="sub">
-Descubra em segundos se existem cláusulas abusivas no seu contrato.
+Descubra cláusulas abusivas antes de assinar qualquer contrato.
 </p>
 
-<div class="card">
+<div class="upload-box">
 
-<h2>Envie seu contrato em PDF</h2>
-
-<input 
-type="text" 
-id="contato" 
-placeholder="Digite seu email ou WhatsApp para receber o relatório"
-/>
-
-<div class="upload-area" onclick="document.getElementById('fileInput').click()">
-
-<label class="file-label">
+<label class="upload-btn">
 ESCOLHER ARQUIVO
-<input type="file" id="fileInput" accept=".pdf" hidden>
+<input type="file" id="fileInput" accept=".pdf">
 </label>
 
-<div id="fileName" class="file-name"></div>
+<br>
 
-</div>
-
-<button id="analisarBtn" onclick="enviarContrato()">
-Analisar contrato
+<button onclick="enviarContrato()">
+ANALISAR CONTRATO
 </button>
 
+<div class="benefits">
+⚡ Resultado em segundos<br>
+🔒 100% confidencial<br>
+📄 Compatível com qualquer contrato
+</div>
+
 <div class="loading" id="loading">
-🔎 IA analisando contrato...
+
+<div class="spinner"></div>
+
+<p style="margin-top:20px;color:#94a3b8">
+Analisando contrato com Inteligência Artificial...
+</p>
+
 </div>
 
-<div class="progress" id="progress">
-<div class="progress-bar" id="progressBar"></div>
-</div>
+<div class="result" id="result">
 
-</div>
+<h3>Resultado da Análise</h3>
 
+<p id="preview"></p>
 
-<div id="resultado" class="resultado">
-
-<h2>Resultado da análise</h2>
-
-<div class="resultado-box">
-
-<p><strong>Risco do contrato:</strong> <span id="risco"></span></p>
-
-<p><strong>Resumo:</strong></p>
-
-<p id="resumo"></p>
-
-<div id="mensagemBloqueio" style="color:#facc15;font-weight:bold;margin-top:15px"></div>
-
-<div id="relatorioCompleto" style="margin-top:20px"></div>
-
+<div class="cta" onclick="comprar()">
+Desbloquear relatório completo
 </div>
 
 </div>
 
 </div>
 
+<footer>
 
-<div class="footer">
+© 2026 Análise de Contratos com IA  
+Protegendo você contra cláusulas abusivas.
 
-<strong>J. Simões Engenharia de Software</strong>
-
-<br><br>
-
-Tecnologia aplicada à análise jurídica automatizada com Inteligência Artificial.
-
-<br><br>
-
-© 2026 IA Análise de Contratos — Todos os direitos reservados.
+</footer>
 
 </div>
-
 
 <script>
 
-const fileInput = document.getElementById("fileInput");
-const fileName = document.getElementById("fileName");
-
-fileInput.addEventListener("change", function(){
-
-const file = fileInput.files[0];
-
-if(!file) return;
-
-if(file.type !== "application/pdf"){
-alert("Envie apenas arquivos PDF.");
-fileInput.value="";
-return;
-}
-
-fileName.innerText="Arquivo selecionado: "+file.name;
-
-});
-
-
 async function enviarContrato(){
 
-const file = fileInput.files[0];
-const contato = document.getElementById("contato").value;
-
-if(!contato){
-alert("Digite um email ou WhatsApp.");
-return;
-}
+let file=document.getElementById("fileInput").files[0];
 
 if(!file){
-alert("Selecione um arquivo PDF.");
+alert("Selecione um contrato PDF");
 return;
 }
 
-const loading = document.getElementById("loading");
-const progress = document.getElementById("progress");
-const progressBar = document.getElementById("progressBar");
+document.getElementById("loading").style.display="block";
 
-loading.style.display="block";
-progress.style.display="block";
-
-progressBar.style.width="20%";
-
-const formData = new FormData();
+let formData=new FormData();
 formData.append("file",file);
-formData.append("contato",contato);
 
-try{
-
-progressBar.style.width="50%";
-
-const response = await fetch(
+let response=await fetch(
 "https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/gerar-relatorio",
 {
 method:"POST",
 body:formData
 });
 
-progressBar.style.width="80%";
+let data=await response.json();
 
-const data = await response.json();
+document.getElementById("loading").style.display="none";
 
-progressBar.style.width="100%";
+document.getElementById("result").style.display="block";
 
-loading.style.display="none";
+document.getElementById("preview").innerText=data.resumo_preview;
 
-document.getElementById("resultado").style.display="block";
-
-document.getElementById("risco").innerText = data.risco;
-
-document.getElementById("resumo").innerText = data.resumo_preview || "";
-
-if(data.bloqueado){
-
-document.getElementById("mensagemBloqueio").innerText = data.mensagem;
-
-document.getElementById("relatorioCompleto").innerHTML =
-'<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank" style="display:inline-block;margin-top:15px;padding:12px 20px;background:#00ff9d;color:black;border-radius:6px;text-decoration:none;font-weight:bold">Desbloquear relatório completo</a>';
-
-}else{
-
-document.getElementById("relatorioCompleto").innerText = data.relatorio_completo;
+window.relatorioId=data.id;
 
 }
 
-}catch(error){
+function comprar(){
 
-loading.style.display="none";
-
-alert("Erro ao analisar contrato.");
-
-console.error(error);
-
-}
+window.location.href="https://pay.kiwify.com.br/xEno6gD?relatorio="+window.relatorioId;
 
 }
 
