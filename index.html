@@ -4,178 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Análise de Contrato com IA</title>
+<title>IA Análise de Contratos</title>
 
 <style>
 
 body{
-font-family:Arial,Helvetica,sans-serif;
-margin:0;
-background:#0b0f1a;
+font-family: Arial, Helvetica, sans-serif;
+background:#0b0f19;
 color:white;
-text-align:center;
+margin:0;
+padding:0;
 }
 
 .container{
-max-width:900px;
+max-width:1000px;
 margin:auto;
 padding:40px 20px;
+text-align:center;
 }
 
 h1{
-font-size:42px;
+font-size:40px;
 margin-bottom:10px;
 }
 
-.sub{
-font-size:18px;
-opacity:0.8;
+.subtitle{
+font-size:20px;
+opacity:0.9;
 margin-bottom:40px;
 }
 
 .box{
-background:#12182b;
-padding:40px;
-border-radius:12px;
-box-shadow:0 10px 40px rgba(0,0,0,0.6);
+background:#141b2d;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
-.upload{
-margin:30px 0;
-}
-
-input[type=file]{
-display:none;
-}
-
-.file-label{
-display:inline-block;
-padding:16px 28px;
-background:#3b82f6;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-transition:0.2s;
-}
-
-.file-label:hover{
-background:#1d4ed8;
+input{
+width:80%;
+padding:14px;
+border-radius:6px;
+border:none;
+margin-top:10px;
+font-size:16px;
 }
 
 button{
-padding:18px 36px;
+margin-top:20px;
+padding:15px 35px;
+font-size:18px;
 border:none;
 border-radius:8px;
-background:#10b981;
-font-size:18px;
+background:#2b7cff;
 color:white;
 cursor:pointer;
-transition:0.2s;
+font-weight:bold;
 }
 
 button:hover{
-background:#059669;
-}
-
-.loading{
-display:none;
-margin-top:20px;
-font-size:18px;
+background:#1f5fd6;
 }
 
 .result{
 margin-top:30px;
-background:#0f172a;
-padding:25px;
-border-radius:10px;
-display:none;
-text-align:left;
-}
-
-.trust{
-margin-top:60px;
-display:flex;
-gap:30px;
-justify-content:center;
-flex-wrap:wrap;
-font-size:14px;
-opacity:0.9;
-}
-
-.trust div{
-background:#111827;
-padding:15px 20px;
+padding:20px;
+background:#0f1423;
 border-radius:8px;
+display:none;
+}
+
+.features{
+display:flex;
+justify-content:space-around;
+flex-wrap:wrap;
+margin-top:40px;
+}
+
+.feature{
+width:250px;
+margin:15px;
 }
 
 footer{
-margin-top:80px;
-background:#f5f5f5;
-color:#444;
-padding:40px 20px;
-}
-
-.footer-container{
-max-width:1200px;
-margin:auto;
-display:flex;
-justify-content:center;
-gap:40px;
-align-items:center;
-flex-wrap:wrap;
-}
-
-.footer-brand{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.footer-brand h2{
-margin:0;
-font-size:20px;
-}
-
-.footer-brand span{
-font-size:14px;
-display:block;
-}
-
-.footer-divider{
-width:1px;
-height:60px;
-background:#ccc;
-}
-
-.footer-features{
-display:flex;
-gap:30px;
-flex-wrap:wrap;
-}
-
-.footer-features div{
-display:flex;
-align-items:center;
-gap:8px;
-font-size:14px;
-}
-
-.footer-bottom{
-margin-top:20px;
-font-size:13px;
-text-align:center;
-}
-
-@media(max-width:700px){
-
-h1{
-font-size:32px;
-}
-
-.box{
+margin-top:60px;
+background:#020617;
 padding:25px;
+font-size:14px;
+color:#94a3b8;
+text-align:center;
+border-top:1px solid #1e293b;
 }
 
+.footer-company{
+font-weight:bold;
+color:#cbd5f5;
+margin-bottom:8px;
+font-size:16px;
 }
 
 </style>
@@ -185,40 +110,48 @@ padding:25px;
 
 <div class="container">
 
-<h1>Descubra riscos ocultos no seu contrato</h1>
+<h1>IA Análise de Contratos</h1>
 
-<p class="sub">
-Envie seu contrato em PDF e receba uma análise profissional em segundos usando Inteligência Artificial.
-</p>
+<div class="subtitle">
+Descubra cláusulas abusivas e riscos ocultos no seu contrato em segundos usando Inteligência Artificial.
+</div>
 
 <div class="box">
 
-<label class="file-label">
-Escolher arquivo PDF
-<input id="fileInput" type="file" accept="application/pdf">
-</label>
+<h2>Analise seu contrato agora</h2>
 
-<br><br>
+<input 
+type="text" 
+id="contrato" 
+placeholder="Cole aqui o texto do contrato"
+/>
 
-<button onclick="analisar()">Analisar contrato agora</button>
+<br>
 
-<div class="loading" id="loading">
-Analisando contrato com Inteligência Artificial...
+<button onclick="gerarRelatorio()">
+Analisar Contrato
+</button>
+
+<div id="resultado" class="result"></div>
+
 </div>
 
-<div class="result" id="resultado"></div>
+<div class="features">
 
+<div class="feature">
+<h3>⚡ Análise Instantânea</h3>
+<p>A IA analisa cláusulas em segundos.</p>
 </div>
 
-<div class="trust">
+<div class="feature">
+<h3>🔍 Identificação de Riscos</h3>
+<p>Detecta cláusulas abusivas automaticamente.</p>
+</div>
 
-<div>🔒 Segurança SSL</div>
-
-<div>⚖️ Análise jurídica automatizada</div>
-
-<div>📄 Contratos protegidos</div>
-
-<div>🤖 Inteligência Artificial</div>
+<div class="feature">
+<h3>📑 Relatório Completo</h3>
+<p>Receba um relatório detalhado e compreensível.</p>
+</div>
 
 </div>
 
@@ -226,103 +159,49 @@ Analisando contrato com Inteligência Artificial...
 
 <footer>
 
-<div class="footer-container">
-
-<div class="footer-brand">
-
-<div>
-
-<h2>J. Simões</h2>
-
-<span>Engenharia de Software</span>
-
-<p style="font-size:13px">Especialistas em Inteligência Artificial</p>
-
+<div class="footer-company">
+J. Simões Engenharia de Software
 </div>
 
-</div>
+© 2026 IA Análise de Contratos — Plataforma de Inteligência Artificial para análise de cláusulas contratuais.<br><br>
 
-<div class="footer-divider"></div>
-
-<div class="footer-features">
-
-<div>🔒 SSL Seguro</div>
-
-<div>✔ Contratos protegidos</div>
-
-<div>📄 Documentos confidenciais</div>
-
-<div>⚖️ Análise jurídica automatizada</div>
-
-</div>
-
-</div>
-
-<div class="footer-bottom">
-
-<p>© 2026 J.Simões Engenharia de Software</p>
-
-<span>Dados processados com confidencialidade apenas para gerar relatórios jurídicos solicitados.</span>
-
-</div>
+Tecnologia desenvolvida para aumentar transparência e segurança em relações contratuais.
 
 </footer>
 
 <script>
 
-async function analisar(){
+async function gerarRelatorio(){
 
-const fileInput=document.getElementById("fileInput");
+const texto = document.getElementById("contrato").value;
 
-if(!fileInput.files.length){
+const resultado = document.getElementById("resultado");
 
-alert("Selecione um contrato em PDF");
-
-return;
-
-}
-
-const file=fileInput.files[0];
-
-const formData=new FormData();
-
-formData.append("file",file);
-
-document.getElementById("loading").style.display="block";
+resultado.style.display="block";
+resultado.innerHTML="Analisando contrato...";
 
 try{
 
-const response=await fetch("https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/gerar-relatorio",{
-
+const response = await fetch(
+"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/gerar-relatorio",
+{
 method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+contrato:texto
+})
+}
+);
 
-body:formData
+const data = await response.json();
 
-});
+resultado.innerHTML = data.relatorio || JSON.stringify(data);
 
-const data=await response.json();
+}catch(error){
 
-document.getElementById("loading").style.display="none";
-
-const box=document.getElementById("resultado");
-
-box.style.display="block";
-
-box.innerHTML=`
-
-<h3>Resultado da análise</h3>
-
-<p><b>Nível de risco:</b> ${data.risco}</p>
-
-<p>${data.resumo_preview || data.relatorio_completo}</p>
-
-`;
-
-}catch(e){
-
-document.getElementById("loading").style.display="none";
-
-alert("Erro ao analisar contrato");
+resultado.innerHTML="Erro ao analisar contrato.";
 
 }
 
@@ -331,5 +210,4 @@ alert("Erro ao analisar contrato");
 </script>
 
 </body>
-
 </html>
