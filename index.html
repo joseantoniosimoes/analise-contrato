@@ -2,286 +2,134 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Análise de Contrato com IA</title>
+<title>Análise de Contratos com IA</title>
 
 <style>
 
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b1120;
+font-family: Arial;
+background:#0f172a;
 color:white;
-margin:0;
-padding:0;
+text-align:center;
+padding:40px;
 }
 
 .container{
-max-width:900px;
+max-width:700px;
 margin:auto;
-padding:40px;
-text-align:center;
 }
 
 h1{
-font-size:38px;
+font-size:36px;
 margin-bottom:10px;
 }
 
 .sub{
-color:#9ca3af;
-font-size:18px;
-margin-bottom:40px;
+color:#cbd5f5;
+margin-bottom:30px;
 }
 
-.box{
-background:#111827;
+.upload-box{
+border:2px dashed #334155;
 padding:40px;
 border-radius:12px;
-box-shadow:0 0 20px rgba(0,0,0,0.5);
+background:#020617;
 }
 
-textarea{
-width:100%;
-height:180px;
-border-radius:8px;
-border:none;
-padding:15px;
-margin-top:15px;
-background:#1f2937;
-color:white;
-}
-
-.file-upload{
-margin-top:20px;
-}
-
-.file-upload input{
+input[type=file]{
 display:none;
 }
 
-.file-label{
+.upload-btn{
 display:inline-block;
-padding:14px 24px;
-background:#374151;
-border-radius:8px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.file-label:hover{
-background:#1f2937;
-}
-
-button{
-background:#2563eb;
-border:none;
 padding:16px 28px;
+background:#2563eb;
 border-radius:8px;
-font-size:18px;
-color:white;
-margin-top:25px;
 cursor:pointer;
+font-weight:bold;
 transition:0.3s;
 }
 
-button:hover{
+.upload-btn:hover{
 background:#1d4ed8;
 }
 
-#progress{
-width:100%;
-background:#1f2937;
-border-radius:10px;
+.benefits{
 margin-top:20px;
-display:none;
-}
-
-#bar{
-height:12px;
-width:0%;
-background:#22c55e;
-border-radius:10px;
-transition:width 0.4s;
-}
-
-#resultado{
-display:none;
-margin-top:40px;
-background:#1f2937;
-padding:30px;
-border-radius:10px;
-text-align:left;
-}
-
-.alerta{
-color:#facc15;
-font-weight:bold;
-font-size:22px;
-margin-bottom:15px;
-}
-
-.comprar{
-background:#22c55e;
-margin-top:25px;
-}
-
-.comprar:hover{
-background:#15803d;
-}
-
-.beneficios{
-margin-top:50px;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:#111827;
-padding:20px;
-border-radius:10px;
-}
-
-.footer{
-margin-top:60px;
-color:#6b7280;
 font-size:14px;
+color:#94a3b8;
+}
+
+button{
+margin-top:20px;
+padding:16px 32px;
+background:#22c55e;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Análise Profissional de Contrato com IA</h1>
+<h1>Analise qualquer contrato em 30 segundos com IA</h1>
 
 <p class="sub">
-Descubra riscos jurídicos antes de assinar qualquer contrato.
+Descubra cláusulas abusivas antes de assinar qualquer contrato.
 </p>
 
-<div class="box">
+<div class="upload-box">
 
-<h2>Envie seu contrato</h2>
-
-<p>Cole o texto ou envie um PDF</p>
-
-<textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
-
-<div class="file-upload">
-
-<label class="file-label">
-📄 Escolher arquivo PDF
-<input type="file" id="pdf" accept=".pdf">
+<label class="upload-btn">
+Escolher Arquivo PDF
+<input type="file" id="fileInput" accept=".pdf">
 </label>
 
+<div class="benefits">
+⚡ Resultado em segundos <br>
+🔒 100% confidencial <br>
+📄 Compatível com qualquer contrato
 </div>
 
-<br>
-
-<button onclick="analisar()">Analisar contrato</button>
-
-<div id="progress">
-<div id="bar"></div>
-</div>
-
-<div id="resultado">
-
-<p class="alerta">
-⚠️ Encontramos cláusulas que podem gerar prejuízo financeiro
-</p>
-
-<p>
-Nossa análise preliminar identificou possíveis riscos jurídicos.
-</p>
-
-<p>
-Classificação de risco: <b>MÉDIO</b>
-</p>
-
-<p>
-O relatório completo revela:
-</p>
-
-<ul>
-<li>Explicação jurídica detalhada</li>
-<li>Estimativa de prejuízo financeiro</li>
-<li>Cláusulas perigosas destacadas</li>
-<li>Orientação antes de assinar</li>
-</ul>
-
-<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
-
-<button class="comprar">
-Desbloquear relatório completo por R$29,90
+<button onclick="enviarContrato()">
+Analisar Contrato
 </button>
 
-</a>
-
 </div>
-
-</div>
-
-<div class="beneficios">
-
-<div class="card">
-<h3>⚡ Análise em minutos</h3>
-<p>IA especializada em contratos jurídicos.</p>
-</div>
-
-<div class="card">
-<h3>🛡️ Evite prejuízos</h3>
-<p>Identifique cláusulas abusivas antes de assinar.</p>
-</div>
-
-<div class="card">
-<h3>📊 Relatório profissional</h3>
-<p>Entenda exatamente o risco do contrato.</p>
-</div>
-
-</div>
-
-<p class="footer">
-Análise automatizada com inteligência artificial.
-</p>
 
 </div>
 
 <script>
 
-function analisar(){
+async function enviarContrato(){
 
-let texto = document.getElementById("contrato").value
-let pdf = document.getElementById("pdf").files.length
+let file=document.getElementById("fileInput").files[0];
 
-if(texto.length < 30 && pdf === 0){
-
-alert("Cole o contrato ou envie um PDF para análise")
-
-return
-
+if(!file){
+alert("Escolha um contrato PDF");
+return;
 }
 
-document.getElementById("progress").style.display="block"
+let formData=new FormData();
+formData.append("file",file);
 
-let progresso=0
+let response=await fetch("SUA_EDGE_FUNCTION_AQUI",{
+method:"POST",
+body:formData
+});
 
-let interval=setInterval(function(){
+let data=await response.json();
 
-progresso+=10
-
-document.getElementById("bar").style.width=progresso+"%"
-
-if(progresso>=100){
-
-clearInterval(interval)
-
-document.getElementById("resultado").style.display="block"
-
-}
-
-},200)
+alert("Análise concluída!");
 
 }
 
