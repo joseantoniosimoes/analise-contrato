@@ -2,234 +2,129 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Análise de Contratos com IA</title>
+<title>Análise de Contrato com IA</title>
 
 <style>
-
 body{
-margin:0;
-font-family:Arial;
-background:#020617;
+font-family:Arial, Helvetica, sans-serif;
+background:#0f172a;
 color:white;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:60px 20px;
-text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:40px;
 }
 
 h1{
-font-size:48px;
+font-size:32px;
 margin-bottom:10px;
-background:linear-gradient(90deg,#60a5fa,#22c55e);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
 }
 
-.sub{
-color:#94a3b8;
-font-size:18px;
-margin-bottom:40px;
-}
-
-.upload-box{
-background:#020617;
-border:2px dashed #334155;
-padding:50px;
-border-radius:14px;
-}
-
-.upload-btn{
-background:#2563eb;
-padding:18px 32px;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-display:inline-block;
-transition:0.3s;
-}
-
-.upload-btn:hover{
-background:#1d4ed8;
-}
-
-input[type=file]{
-display:none;
+textarea{
+width:600px;
+height:200px;
+padding:15px;
+border-radius:8px;
+border:none;
+margin-top:20px;
 }
 
 button{
-margin-top:25px;
-padding:18px 40px;
-font-size:18px;
-background:#22c55e;
+background:#2563eb;
+color:white;
+padding:14px 26px;
 border:none;
-border-radius:10px;
+border-radius:8px;
+font-size:16px;
+margin-top:20px;
 cursor:pointer;
-transition:0.3s;
 }
 
 button:hover{
-background:#16a34a;
+background:#1d4ed8;
 }
 
-.benefits{
-margin-top:30px;
-color:#94a3b8;
-font-size:14px;
-}
-
-.loading{
-display:none;
-margin-top:30px;
-}
-
-.spinner{
-border:4px solid #1e293b;
-border-top:4px solid #22c55e;
-border-radius:50%;
-width:40px;
-height:40px;
-animation:spin 1s linear infinite;
-margin:auto;
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-}
-
-.result{
-display:none;
-margin-top:30px;
-padding:30px;
-background:#020617;
+#resultado{
+margin-top:40px;
+max-width:600px;
+background:#1e293b;
+padding:25px;
 border-radius:10px;
-border:1px solid #334155;
-text-align:left;
+display:none;
 }
 
-.cta{
+.alerta{
+color:#ffcc00;
+font-weight:bold;
+font-size:20px;
+}
+
+.comprar{
 margin-top:20px;
 background:#22c55e;
-padding:15px;
-border-radius:8px;
-text-align:center;
-cursor:pointer;
-font-weight:bold;
 }
 
-footer{
-margin-top:80px;
-text-align:center;
-color:#64748b;
-font-size:13px;
+.comprar:hover{
+background:#16a34a;
 }
-
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<h1>Análise Profissional de Contrato com IA</h1>
 
-<h1>Analise qualquer contrato em 30 segundos com IA</h1>
+<p>Descubra riscos jurídicos antes de assinar qualquer contrato.</p>
 
-<p class="sub">
-Descubra cláusulas abusivas antes de assinar qualquer contrato.
+<textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
+
+<button onclick="analisar()">Analisar contrato</button>
+
+<div id="resultado">
+
+<p class="alerta">
+⚠️ Encontramos possíveis riscos neste contrato
 </p>
 
-<div class="upload-box">
+<p>
+Identificamos cláusulas que podem gerar prejuízo financeiro significativo.
+</p>
 
-<label class="upload-btn">
-ESCOLHER ARQUIVO
-<input type="file" id="fileInput" accept=".pdf">
-</label>
+<p>
+Este contrato apresenta <b>risco classificado como MÉDIO</b>.
+</p>
 
-<br>
+<p>
+Para ver o relatório completo com:
+</p>
 
-<button onclick="enviarContrato()">
-ANALISAR CONTRATO
+<ul>
+<li>Explicação jurídica detalhada</li>
+<li>Estimativa de prejuízo</li>
+<li>Como se proteger antes de assinar</li>
+</ul>
+
+<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
+<button class="comprar">
+Desbloquear relatório completo por R$29,90
 </button>
-
-<div class="benefits">
-⚡ Resultado em segundos<br>
-🔒 100% confidencial<br>
-📄 Compatível com qualquer contrato
-</div>
-
-<div class="loading" id="loading">
-
-<div class="spinner"></div>
-
-<p style="margin-top:20px;color:#94a3b8">
-Analisando contrato com Inteligência Artificial...
-</p>
-
-</div>
-
-<div class="result" id="result">
-
-<h3>Resultado da Análise</h3>
-
-<p id="preview"></p>
-
-<div class="cta" onclick="comprar()">
-Desbloquear relatório completo
-</div>
-
-</div>
-
-</div>
-
-<footer>
-
-© 2026 Análise de Contratos com IA  
-Protegendo você contra cláusulas abusivas.
-
-</footer>
+</a>
 
 </div>
 
 <script>
 
-async function enviarContrato(){
+function analisar(){
 
-let file=document.getElementById("fileInput").files[0];
+let texto = document.getElementById("contrato").value
 
-if(!file){
-alert("Selecione um contrato PDF");
-return;
+if(texto.length < 50){
+alert("Cole o contrato para análise")
+return
 }
 
-document.getElementById("loading").style.display="block";
-
-let formData=new FormData();
-formData.append("file",file);
-
-let response=await fetch(
-"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/gerar-relatorio",
-{
-method:"POST",
-body:formData
-});
-
-let data=await response.json();
-
-document.getElementById("loading").style.display="none";
-
-document.getElementById("result").style.display="block";
-
-document.getElementById("preview").innerText=data.resumo_preview;
-
-window.relatorioId=data.id;
-
-}
-
-function comprar(){
-
-window.location.href="https://pay.kiwify.com.br/xEno6gD?relatorio="+window.relatorioId;
+document.getElementById("resultado").style.display = "block"
 
 }
 
