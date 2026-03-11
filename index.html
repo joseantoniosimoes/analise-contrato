@@ -165,18 +165,9 @@ Descubra riscos jurídicos antes de assinar qualquer contrato.
 
 <h2>Envie seu contrato</h2>
 
-<p>Cole o texto ou envie um PDF</p>
+<p>Cole o texto do contrato</p>
 
 <textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
-
-<div class="file-upload">
-
-<label class="file-label">
-📄 Escolher arquivo PDF
-<input type="file" id="pdf" accept=".pdf">
-</label>
-
-</div>
 
 <br>
 
@@ -186,40 +177,7 @@ Descubra riscos jurídicos antes de assinar qualquer contrato.
 <div id="bar"></div>
 </div>
 
-<div id="resultado">
-
-<p class="alerta">
-⚠️ Encontramos cláusulas que podem gerar prejuízo financeiro
-</p>
-
-<p>
-Nossa análise preliminar identificou possíveis riscos jurídicos.
-</p>
-
-<p>
-Classificação de risco: <b>MÉDIO</b>
-</p>
-
-<p>
-O relatório completo revela:
-</p>
-
-<ul>
-<li>Explicação jurídica detalhada</li>
-<li>Estimativa de prejuízo financeiro</li>
-<li>Cláusulas perigosas destacadas</li>
-<li>Orientação antes de assinar</li>
-</ul>
-
-<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
-
-<button class="comprar">
-Desbloquear relatório completo por R$29,90
-</button>
-
-</a>
-
-</div>
+<div id="resultado"></div>
 
 </div>
 
@@ -250,14 +208,13 @@ Análise automatizada com inteligência artificial.
 
 <script>
 
-function analisar(){
+async function analisar(){
 
 let texto = document.getElementById("contrato").value
-let pdf = document.getElementById("pdf").files.length
 
-if(texto.length < 30 && pdf === 0){
+if(texto.length < 30){
 
-alert("Cole o contrato ou envie um PDF para análise")
+alert("Cole o contrato para análise")
 
 return
 
@@ -265,23 +222,47 @@ return
 
 document.getElementById("progress").style.display="block"
 
-let progresso=0
+document.getElementById("bar").style.width="40%"
 
-let interval=setInterval(function(){
+const resposta = await fetch("https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",{
 
-progresso+=10
+method:"POST",
 
-document.getElementById("bar").style.width=progresso+"%"
+headers:{
+"Content-Type":"application/json"
+},
 
-if(progresso>=100){
+body:JSON.stringify({
+contrato:texto
+})
 
-clearInterval(interval)
+})
+
+const dados = await resposta.json()
+
+document.getElementById("bar").style.width="100%"
 
 document.getElementById("resultado").style.display="block"
 
-}
+document.getElementById("resultado").innerHTML = `
 
-},200)
+<p class="alerta">⚠️ Encontramos possíveis riscos</p>
+
+<p>${dados.preview}</p>
+
+<p><b>Classificação de risco:</b> ${dados.risco}</p>
+
+<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
+
+<button class="comprar">
+
+Desbloquear relatório completo por R$29,90
+
+</button>
+
+</a>
+
+`
 
 }
 
