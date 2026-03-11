@@ -165,9 +165,18 @@ Descubra riscos jurídicos antes de assinar qualquer contrato.
 
 <h2>Envie seu contrato</h2>
 
-<p>Cole o texto do contrato</p>
+<p>Cole o texto ou envie um arquivo</p>
 
 <textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
+
+<div class="file-upload">
+
+<label class="file-label">
+📄 Escolher arquivo (PDF ou Word)
+<input type="file" id="arquivo" accept=".pdf,.doc,.docx">
+</label>
+
+</div>
 
 <br>
 
@@ -211,32 +220,34 @@ Análise automatizada com inteligência artificial.
 async function analisar(){
 
 let texto = document.getElementById("contrato").value
+let arquivo = document.getElementById("arquivo").files[0]
 
-if(texto.length < 30){
+if(texto.length < 30 && !arquivo){
 
-alert("Cole o contrato para análise")
+alert("Cole o contrato ou envie um arquivo")
 
 return
 
 }
 
 document.getElementById("progress").style.display="block"
-
 document.getElementById("bar").style.width="40%"
 
-const resposta = await fetch("https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",{
+const formData = new FormData()
 
+formData.append("contrato", texto)
+
+if(arquivo){
+formData.append("arquivo", arquivo)
+}
+
+const resposta = await fetch(
+"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
+{
 method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-contrato:texto
-})
-
-})
+body:formData
+}
+)
 
 const dados = await resposta.json()
 
