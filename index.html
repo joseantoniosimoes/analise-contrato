@@ -1,233 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Análise de Contrato com IA</title>
-
-<style>
-
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b1120;
-color:white;
-margin:0;
-padding:0;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:40px;
-text-align:center;
-}
-
-h1{
-font-size:38px;
-margin-bottom:10px;
-}
-
-.sub{
-color:#9ca3af;
-font-size:18px;
-margin-bottom:20px;
-}
-
-.prova{
-color:#22c55e;
-font-weight:bold;
-margin-bottom:40px;
-}
-
-.box{
-background:#111827;
-padding:40px;
-border-radius:12px;
-box-shadow:0 0 20px rgba(0,0,0,0.5);
-}
-
-textarea{
-width:100%;
-height:180px;
-border-radius:8px;
-border:none;
-padding:15px;
-margin-top:15px;
-background:#1f2937;
-color:white;
-}
-
-.file-upload{
-margin-top:20px;
-}
-
-.file-upload input{
-display:none;
-}
-
-.file-label{
-display:inline-block;
-padding:14px 24px;
-background:#374151;
-border-radius:8px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.file-label:hover{
-background:#1f2937;
-}
-
-button{
-background:#2563eb;
-border:none;
-padding:16px 28px;
-border-radius:8px;
-font-size:18px;
-color:white;
-margin-top:25px;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#1d4ed8;
-}
-
-#progress{
-width:100%;
-background:#1f2937;
-border-radius:10px;
-margin-top:20px;
-display:none;
-}
-
-#bar{
-height:12px;
-width:0%;
-background:#22c55e;
-border-radius:10px;
-transition:width 0.4s;
-}
-
-#resultado{
-display:none;
-margin-top:40px;
-background:#1f2937;
-padding:30px;
-border-radius:10px;
-text-align:left;
-}
-
-.alerta{
-color:#facc15;
-font-weight:bold;
-font-size:22px;
-margin-bottom:15px;
-}
-
-.comprar{
-background:#22c55e;
-margin-top:25px;
-}
-
-.comprar:hover{
-background:#15803d;
-}
-
-.beneficios{
-margin-top:50px;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:#111827;
-padding:20px;
-border-radius:10px;
-}
-
-.footer{
-margin-top:60px;
-color:#6b7280;
-font-size:14px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Análise Profissional de Contrato com IA</h1>
-
-<p class="sub">
-Descubra riscos jurídicos antes de assinar qualquer contrato.
-</p>
-
-<p class="prova">
-+2.300 contratos já analisados pela inteligência artificial
-</p>
-
-<div class="box">
-
-<h2>Envie seu contrato</h2>
-
-<p>Cole o texto ou envie um arquivo</p>
-
-<textarea id="contrato" placeholder="Cole aqui o texto do contrato..."></textarea>
-
-<div class="file-upload">
-
-<label class="file-label">
-📄 Escolher arquivo (PDF ou Word)
-<input type="file" id="arquivo" accept=".pdf,.doc,.docx">
-</label>
-
-</div>
-
-<br>
-
-<button onclick="analisar()">Analisar contrato</button>
-
-<div id="progress">
-<div id="bar"></div>
-</div>
-
-<div id="resultado"></div>
-
-</div>
-
-<div class="beneficios">
-
-<div class="card">
-<h3>⚡ Análise em minutos</h3>
-<p>IA especializada em contratos jurídicos.</p>
-</div>
-
-<div class="card">
-<h3>🛡️ Evite prejuízos</h3>
-<p>Identifique cláusulas abusivas antes de assinar.</p>
-</div>
-
-<div class="card">
-<h3>📊 Relatório profissional</h3>
-<p>Entenda exatamente o risco do contrato.</p>
-</div>
-
-</div>
-
-<p class="footer">
-Análise automatizada com inteligência artificial.
-</p>
-
-</div>
-
 <script>
 
 async function analisar(){
+
+try{
 
 let texto = document.getElementById("contrato").value
 let arquivo = document.getElementById("arquivo").files[0]
@@ -235,51 +10,71 @@ let arquivo = document.getElementById("arquivo").files[0]
 if(texto.length < 30 && !arquivo){
 
 alert("Cole o contrato ou envie um arquivo")
-
 return
 
 }
 
 document.getElementById("progress").style.display="block"
-document.getElementById("bar").style.width="30%"
+document.getElementById("bar").style.width="20%"
 
-let body
+let resposta
 
 if(arquivo){
 
 const formData = new FormData()
+
 formData.append("arquivo",arquivo)
 formData.append("contrato",texto)
 
-body=formData
-
-}else{
-
-body=JSON.stringify({contrato:texto})
-
-}
-
-const resposta = await fetch(
+resposta = await fetch(
 "https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
 {
 method:"POST",
-headers: arquivo ? {} : {"Content-Type":"application/json"},
-body:body
+body:formData
 })
 
+}else{
+
+resposta = await fetch(
+"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+contrato:texto
+})
+})
+
+}
+
+document.getElementById("bar").style.width="70%"
+
+if(!resposta.ok){
+
+throw new Error("Erro na API")
+
+}
+
 const dados = await resposta.json()
+
+console.log("Resposta da API:",dados)
 
 document.getElementById("bar").style.width="100%"
 
 document.getElementById("resultado").style.display="block"
 
-document.getElementById("resultado").innerHTML=`
+let risco = dados.risco || "MÉDIO"
+let preview = dados.preview || "A análise identificou possíveis cláusulas que podem gerar riscos financeiros ou jurídicos."
+
+document.getElementById("resultado").innerHTML = `
 
 <p class="alerta">⚠️ Análise preliminar concluída</p>
 
-<p><b>Classificação de risco:</b> ${dados.risco}</p>
+<p><b>Classificação de risco:</b> ${risco}</p>
 
-<p>${dados.preview}</p>
+<p>${preview}</p>
 
 <p><b>O relatório completo revela:</b></p>
 
@@ -300,9 +95,24 @@ Desbloquear relatório completo por R$29,90
 
 `
 
+}catch(erro){
+
+console.error("Erro:",erro)
+
+document.getElementById("progress").style.display="none"
+
+document.getElementById("resultado").style.display="block"
+
+document.getElementById("resultado").innerHTML = `
+
+<p class="alerta">Erro ao analisar contrato</p>
+
+<p>Tente novamente em alguns segundos.</p>
+
+`
+
+}
+
 }
 
 </script>
-
-</body>
-</html>
