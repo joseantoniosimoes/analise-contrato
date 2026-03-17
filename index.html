@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Análise de Contrato com IA</title>
 
-<!-- 🔥 PDF + WORKER (CORREÇÃO DO ERRO) -->
+<!-- 🔥 PDF + WORKER -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -101,6 +101,11 @@ transition:0.3s;
 
 button:hover{
 background:#1d4ed8;
+}
+
+button:disabled{
+opacity:0.6;
+cursor:not-allowed;
 }
 
 #progress{
@@ -236,6 +241,11 @@ Descubra riscos jurídicos antes de assinar qualquer contrato.
 
 async function analisar(){
 
+const botao = document.querySelector("button")
+const progress = document.getElementById("progress")
+const bar = document.getElementById("bar")
+const resultado = document.getElementById("resultado")
+
 try{
 
 let texto=document.getElementById("contrato").value.trim()
@@ -246,21 +256,28 @@ alert("Cole o contrato ou envie um arquivo")
 return
 }
 
-document.getElementById("progress").style.display="block"
-document.getElementById("bar").style.width="20%"
+botao.disabled = true
+botao.innerText = "Analisando contrato..."
 
-// 🔥 LER ARQUIVO
+progress.style.display="block"
+bar.style.width="10%"
+
+// mostra nome do arquivo
+if(arquivo){
+resultado.style.display="block"
+resultado.innerHTML = `<p class="alerta">📄 Arquivo carregado: ${arquivo.name}</p>`
+}
+
+// leitura
 if(arquivo){
 
 const nome=arquivo.name.toLowerCase()
 
-// PDF
 if(nome.endsWith(".pdf")){
-const buffer=await arquivo.arrayBuffer()
+bar.style.width="25%"
 
-const pdf=await pdfjsLib.getDocument({
-data:buffer
-}).promise
+const buffer=await arquivo.arrayBuffer()
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise
 
 let conteudo=""
 
@@ -274,29 +291,33 @@ conteudo+=items.join(" ")+" "
 texto=conteudo
 }
 
-// DOCX
 if(nome.endsWith(".docx")){
+bar.style.width="25%"
+
 const buffer=await arquivo.arrayBuffer()
 const result=await mammoth.extractRawText({arrayBuffer:buffer})
 texto=result.value
 }
 
-// DOC antigo
 if(nome.endsWith(".doc")){
 alert("Arquivo .doc não suportado. Use .docx")
+botao.disabled=false
+botao.innerText="Analisar contrato"
 return
 }
 
 }
 
 if(!texto || texto.length<20){
-alert("Não foi possível ler o contrato.")
+alert("Não foi possível ler o conteúdo do contrato.")
+botao.disabled=false
+botao.innerText="Analisar contrato"
 return
 }
 
-document.getElementById("bar").style.width="60%"
+bar.style.width="50%"
 
-// 🔵 ENVIO
+// envio
 const resposta=await fetch(
 "https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
 {
@@ -307,22 +328,31 @@ headers:{
 body:JSON.stringify({ contrato:texto })
 })
 
+bar.style.width="80%"
+
 const dados=await resposta.json()
 
-document.getElementById("bar").style.width="100%"
+bar.style.width="100%"
 
 let risco=dados.risco || "MÉDIO"
-let preview=dados.preview || "Possíveis riscos detectados."
+let preview=dados.preview || "Foram identificados pontos de atenção no contrato."
 
-document.getElementById("resultado").style.display="block"
+let previewFormatado = preview
+.split(".")
+.filter(p=>p.trim().length>0)
+.slice(0,5)
+.map(p=>`<li>${p.trim()}.</li>`)
+.join("")
 
-document.getElementById("resultado").innerHTML=`
+resultado.style.display="block"
+
+resultado.innerHTML=`
 
 <p class="alerta">⚠️ Análise preliminar concluída</p>
 
 <p><b>Classificação de risco:</b> ${risco}</p>
 
-<p>${preview}</p>
+<ul>${previewFormatado}</ul>
 
 <p><b>O relatório completo revela:</b></p>
 
@@ -341,18 +371,21 @@ Desbloquear relatório completo por R$29,90
 
 `
 
+resultado.scrollIntoView({behavior:"smooth"})
+
 }catch(e){
 
-document.getElementById("progress").style.display="none"
+resultado.style.display="block"
 
-document.getElementById("resultado").style.display="block"
-
-document.getElementById("resultado").innerHTML=`
-
-<p class="alerta">Erro interno ao analisar contrato</p>
-<p>Tente novamente.</p>
-
+resultado.innerHTML=`
+<p class="alerta">Erro ao analisar contrato</p>
+<p>Verifique o arquivo e tente novamente.</p>
 `
+
+}finally{
+
+botao.disabled=false
+botao.innerText="Analisar contrato"
 
 }
 
