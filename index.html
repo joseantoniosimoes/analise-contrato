@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <title>Análise de Contrato com IA</title>
 
+<!-- 🔥 LEITOR DE PDF E WORD -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+
 <style>
 
 body{
@@ -230,10 +234,10 @@ async function analisar(){
 
 try{
 
-let texto=document.getElementById("contrato").value
+let texto=document.getElementById("contrato").value.trim()
 let arquivo=document.getElementById("arquivo").files[0]
 
-if(texto.length<30 && !arquivo){
+if(!texto && !arquivo){
 alert("Cole o contrato ou envie um arquivo")
 return
 }
@@ -241,45 +245,67 @@ return
 document.getElementById("progress").style.display="block"
 document.getElementById("bar").style.width="20%"
 
-let resposta
-
+// 🔥 LER ARQUIVO
 if(arquivo){
 
-let formData=new FormData()
-formData.append("arquivo",arquivo)
-formData.append("contrato",texto)
+const nome=arquivo.name.toLowerCase()
 
-resposta=await fetch(
-"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
-{
-method:"POST",
-body:formData
-})
+// PDF
+if(nome.endsWith(".pdf")){
+const buffer=await arquivo.arrayBuffer()
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise
 
-}else{
+let conteudo=""
 
-resposta=await fetch(
+for(let i=1;i<=pdf.numPages;i++){
+const page=await pdf.getPage(i)
+const txt=await page.getTextContent()
+const items=txt.items.map(i=>i.str)
+conteudo+=items.join(" ")+" "
+}
+
+texto=conteudo
+}
+
+// DOCX
+if(nome.endsWith(".docx")){
+const buffer=await arquivo.arrayBuffer()
+const result=await mammoth.extractRawText({arrayBuffer:buffer})
+texto=result.value
+}
+
+// DOC antigo
+if(nome.endsWith(".doc")){
+alert("Arquivo .doc não suportado. Use .docx")
+return
+}
+
+}
+
+if(!texto || texto.length<20){
+alert("Não foi possível ler o contrato.")
+return
+}
+
+document.getElementById("bar").style.width="60%"
+
+// 🔵 ENVIO
+const resposta=await fetch(
 "https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
 {
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-contrato:texto
-})
+body:JSON.stringify({ contrato:texto })
 })
 
-}
-
-document.getElementById("bar").style.width="70%"
-
-let dados=await resposta.json()
+const dados=await resposta.json()
 
 document.getElementById("bar").style.width="100%"
 
 let risco=dados.risco || "MÉDIO"
-let preview=dados.preview || "Possíveis riscos jurídicos detectados."
+let preview=dados.preview || "Possíveis riscos detectados."
 
 document.getElementById("resultado").style.display="block"
 
@@ -319,7 +345,6 @@ document.getElementById("resultado").style.display="block"
 document.getElementById("resultado").innerHTML=`
 
 <p class="alerta">Erro interno ao analisar contrato</p>
-
 <p>Tente novamente.</p>
 
 `
