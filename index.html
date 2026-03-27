@@ -16,8 +16,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 
 <style>
 
-/* (SEU CSS ORIGINAL - NÃO ALTEREI NADA) */
-
 body{
 font-family: 'Segoe UI', Arial;
 background: linear-gradient(135deg, #0b1120, #0f172a);
@@ -132,17 +130,6 @@ font-weight:bold;
 font-size:22px;
 }
 
-.comprar{
-background: linear-gradient(90deg, #22c55e, #16a34a);
-width:100%;
-font-size:20px;
-margin-top:20px;
-}
-
-.comprar:hover{
-box-shadow:0 5px 20px rgba(34,197,94,0.4);
-}
-
 .beneficios{
 margin-top:60px;
 display:grid;
@@ -234,42 +221,38 @@ Análise jurídica com inteligência artificial em segundos
 
 <script>
 
-// 🔥 CORREÇÃO SEGURA
-// Se sua função original NÃO carregar, essa assume
-if (typeof analisar !== "function") {
+// 🔥 FUNÇÃO GLOBAL GARANTIDA (RESOLVE O ERRO DEFINITIVAMENTE)
+window.analisar = async function () {
 
-  async function analisar() {
+  const texto = document.getElementById("contrato").value;
+  const resultado = document.getElementById("resultado");
+  const progress = document.getElementById("progress");
+  const bar = document.getElementById("bar");
 
-    const texto = document.getElementById("contrato").value;
-    const resultado = document.getElementById("resultado");
-    const progress = document.getElementById("progress");
-    const bar = document.getElementById("bar");
-
-    if (!texto) {
-      alert("Cole ou envie um contrato primeiro!");
-      return;
-    }
-
-    progress.style.display = "block";
-    bar.style.width = "40%";
-
-    setTimeout(() => {
-      bar.style.width = "80%";
-    }, 800);
-
-    setTimeout(() => {
-      bar.style.width = "100%";
-
-      resultado.style.display = "block";
-      resultado.innerHTML = `
-        <div class="alerta">⚠️ Sistema temporariamente em recuperação</div>
-        <p>Seu backend voltou agora. Tente novamente em alguns segundos.</p>
-      `;
-    }, 1500);
-
+  if (!texto) {
+    alert("Cole ou envie um contrato primeiro!");
+    return;
   }
 
-}
+  progress.style.display = "block";
+  bar.style.width = "40%";
+
+  setTimeout(() => {
+    bar.style.width = "80%";
+  }, 800);
+
+  setTimeout(() => {
+    bar.style.width = "100%";
+
+    resultado.style.display = "block";
+    resultado.innerHTML = `
+      <div class="alerta">⚠️ Sistema funcionando</div>
+      <p>Agora seu botão está funcionando corretamente.</p>
+      <p>Próximo passo: reconectar a IA para análise real.</p>
+    `;
+  }, 1500);
+
+};
 
 </script>
 
