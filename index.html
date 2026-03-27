@@ -33,125 +33,51 @@ text-align:center;
 h1{
 font-size:42px;
 font-weight:700;
-margin-bottom:10px;
 }
 
 .sub{
 color:#94a3b8;
 font-size:20px;
-margin-bottom:20px;
-}
-
-.prova{
-color:#22c55e;
-font-weight:600;
-margin-bottom:40px;
 }
 
 .box{
-background: rgba(17,24,39,0.8);
-backdrop-filter: blur(10px);
+background:#020617;
 padding:40px;
 border-radius:16px;
-box-shadow:0 10px 40px rgba(0,0,0,0.6);
+margin-top:30px;
 }
 
 textarea{
 width:100%;
 height:180px;
 border-radius:10px;
-border:1px solid #1f2937;
 padding:15px;
 margin-top:15px;
-background:#020617;
+background:#000;
 color:white;
 }
 
 .file-label{
 display:inline-block;
-padding:14px 24px;
+padding:14px;
 background:#1f2937;
 border-radius:10px;
 cursor:pointer;
 margin-top:20px;
-transition:0.3s;
-}
-
-.file-label:hover{
-background:#374151;
 }
 
 button{
-background: linear-gradient(90deg, #2563eb, #3b82f6);
-border:none;
 padding:18px 30px;
-border-radius:10px;
-font-size:18px;
-color:white;
-margin-top:25px;
-cursor:pointer;
-transition:0.3s;
-font-weight:600;
-}
-
-button:hover{
-transform:scale(1.03);
-box-shadow:0 5px 20px rgba(59,130,246,0.4);
-}
-
-#progress{
-width:100%;
-background:#1f2937;
-border-radius:10px;
 margin-top:20px;
-display:none;
-}
-
-#bar{
-height:12px;
-width:0%;
-background:#22c55e;
-border-radius:10px;
+cursor:pointer;
 }
 
 #resultado{
 display:none;
-margin-top:40px;
-background:#020617;
-padding:30px;
-border-radius:12px;
-text-align:left;
-border:1px solid #1f2937;
-}
-
-.alerta{
-color:#facc15;
-font-weight:bold;
-font-size:22px;
-}
-
-.beneficios{
-margin-top:60px;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:#020617;
-padding:25px;
-border-radius:12px;
-border:1px solid #1f2937;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-.footer{
-margin-top:60px;
-color:#64748b;
+margin-top:20px;
+background:#000;
+padding:20px;
+border-radius:10px;
 }
 
 </style>
@@ -161,96 +87,94 @@ color:#64748b;
 
 <div class="container">
 
-<h1>Descubra riscos ocultos em contratos antes de assinar</h1>
-
-<p class="sub">
-Análise jurídica com inteligência artificial em segundos
-</p>
-
-<p class="prova">
-✔ +2.300 contratos analisados
-</p>
+<h1>Análise de Contrato com IA</h1>
 
 <div class="box">
 
-<h2>Envie seu contrato</h2>
-
-<textarea id="contrato" placeholder="Cole aqui o texto..."></textarea>
+<textarea id="contrato" placeholder="Cole o contrato ou envie um arquivo..."></textarea>
 
 <label class="file-label">
 📄 Upload PDF ou Word
-<input type="file" id="arquivo" accept=".pdf,.doc,.docx" hidden>
+<input type="file" id="arquivo" accept=".pdf,.docx" hidden>
 </label>
 
 <br>
 
 <button onclick="analisar()">Analisar contrato</button>
 
-<div id="progress">
-<div id="bar"></div>
-</div>
-
 <div id="resultado"></div>
 
 </div>
-
-<div class="beneficios">
-
-<div class="card">
-<h3>⚡ Rápido</h3>
-<p>Resultado em segundos</p>
-</div>
-
-<div class="card">
-<h3>🛡️ Seguro</h3>
-<p>Evite prejuízos jurídicos</p>
-</div>
-
-<div class="card">
-<h3>📊 Profissional</h3>
-<p>Análise clara e objetiva</p>
-</div>
-
-</div>
-
-<p class="footer">
-© 2026 J.Simões Engenharia de Software
-</p>
 
 </div>
 
 <script>
 
-// 🔥 FUNÇÃO GLOBAL GARANTIDA (RESOLVE O ERRO DEFINITIVAMENTE)
+// 📄 LER ARQUIVO
+document.getElementById("arquivo").addEventListener("change", async function(e) {
+
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const textarea = document.getElementById("contrato");
+
+  // PDF
+  if (file.type === "application/pdf") {
+
+    const reader = new FileReader();
+
+    reader.onload = async function() {
+      const typedarray = new Uint8Array(this.result);
+      const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+      let texto = "";
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        texto += content.items.map(item => item.str).join(" ");
+      }
+
+      textarea.value = texto;
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+  // WORD
+  else if (file.name.endsWith(".docx")) {
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      mammoth.extractRawText({ arrayBuffer: event.target.result })
+        .then(result => {
+          textarea.value = result.value;
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+});
+
+
+// 🔥 FUNÇÃO PRINCIPAL
 window.analisar = async function () {
 
   const texto = document.getElementById("contrato").value;
   const resultado = document.getElementById("resultado");
-  const progress = document.getElementById("progress");
-  const bar = document.getElementById("bar");
 
-  if (!texto) {
+  if (!texto.trim()) {
     alert("Cole ou envie um contrato primeiro!");
     return;
   }
 
-  progress.style.display = "block";
-  bar.style.width = "40%";
-
-  setTimeout(() => {
-    bar.style.width = "80%";
-  }, 800);
-
-  setTimeout(() => {
-    bar.style.width = "100%";
-
-    resultado.style.display = "block";
-    resultado.innerHTML = `
-      <div class="alerta">⚠️ Sistema funcionando</div>
-      <p>Agora seu botão está funcionando corretamente.</p>
-      <p>Próximo passo: reconectar a IA para análise real.</p>
-    `;
-  }, 1500);
+  resultado.style.display = "block";
+  resultado.innerHTML = `
+    <b>✅ Contrato carregado com sucesso!</b><br><br>
+    Agora podemos enviar para análise com IA.
+  `;
 
 };
 
