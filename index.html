@@ -13,75 +13,133 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 
 <style>
+
 body{
-font-family:Arial;
-background:#0b1120;
+font-family:'Segoe UI',sans-serif;
+background: radial-gradient(circle at top,#1e293b,#020617);
 color:white;
 margin:0;
 }
+
 .container{
 max-width:900px;
 margin:auto;
 padding:40px;
 text-align:center;
 }
-.box{
-background:#111827;
-padding:40px;
-border-radius:12px;
+
+h1{
+font-size:40px;
+background: linear-gradient(90deg,#60a5fa,#22c55e);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
+
+.box{
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(15px);
+padding:40px;
+border-radius:16px;
+box-shadow:0 0 40px rgba(34,197,94,0.2);
+}
+
 textarea{
 width:100%;
 height:180px;
-border-radius:8px;
+border-radius:10px;
 padding:15px;
-background:#1f2937;
+background:#020617;
 color:white;
-border:none;
+border:1px solid rgba(255,255,255,0.1);
 }
+
 button{
-background:#2563eb;
+background: linear-gradient(90deg,#2563eb,#22c55e);
 padding:16px 28px;
-border-radius:8px;
+border-radius:10px;
 color:white;
 border:none;
 margin-top:20px;
 cursor:pointer;
+font-size:18px;
+transition:0.3s;
 }
-#progressText{
-margin-top:15px;
-color:#9ca3af;
-font-size:14px;
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(34,197,94,0.5);
 }
-#bar{
-height:10px;
-width:0%;
-background:#22c55e;
-border-radius:10px;
-transition:0.4s;
-}
+
 #progress{
-background:#1f2937;
-margin-top:15px;
+margin-top:20px;
+background:#020617;
 border-radius:10px;
 overflow:hidden;
 display:none;
 }
+
+#bar{
+height:12px;
+width:0%;
+background: linear-gradient(90deg,#22c55e,#60a5fa,#22c55e);
+background-size:200% 100%;
+animation:move 2s linear infinite;
+}
+
+@keyframes move{
+0%{background-position:0%}
+100%{background-position:200%}
+}
+
+#status{
+margin-top:15px;
+color:#9ca3af;
+}
+
 #resultado{
 display:none;
 margin-top:30px;
-background:#1f2937;
-padding:20px;
-border-radius:10px;
-text-align:left;
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:25px;
+border-radius:14px;
+animation:fade 0.5s;
 }
-.fade{
-animation:fade 0.4s;
-}
+
 @keyframes fade{
-from{opacity:0}
+from{opacity:0;transform:translateY(10px)}
 to{opacity:1}
 }
+
+.premium{
+margin-top:20px;
+padding:20px;
+border-radius:12px;
+background: linear-gradient(135deg,#020617,#0f172a);
+border:1px solid rgba(34,197,94,0.2);
+}
+
+.cta{
+display:block;
+text-decoration:none;
+}
+
+.cta button{
+width:100%;
+margin-top:15px;
+font-size:18px;
+}
+
+.urgencia{
+color:#facc15;
+margin-top:10px;
+}
+
+.alerta{
+color:#f87171;
+font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -89,22 +147,21 @@ to{opacity:1}
 
 <div class="container">
 
-<h1>Análise de Contrato com IA</h1>
+<h1>IA de Análise Contratual</h1>
+
 <p id="contador"></p>
 
 <div class="box">
 
-<textarea id="contrato" placeholder="Cole seu contrato aqui..."></textarea>
+<textarea id="contrato" placeholder="Cole ou envie seu contrato..."></textarea>
 
 <input type="file" id="arquivo">
 
-<button onclick="analisar()">Analisar</button>
+<button onclick="analisar()">Analisar contrato</button>
 
-<div id="progress">
-<div id="bar"></div>
-</div>
+<div id="progress"><div id="bar"></div></div>
 
-<p id="progressText"></p>
+<p id="status"></p>
 
 <div id="resultado"></div>
 
@@ -113,57 +170,52 @@ to{opacity:1}
 
 <script>
 
-// contador vivo
-let n=2317
+// contador dinâmico
+let n=3124
 setInterval(()=>{
-n+=Math.floor(Math.random()*3)
-document.getElementById("contador").innerText = n+" contratos analisados hoje"
+n+=Math.floor(Math.random()*4)
+document.getElementById("contador").innerText=n+" contratos analisados hoje"
 },2000)
 
-// mensagens inteligentes
-const mensagens=[
-"Lendo contrato...",
-"Identificando cláusulas...",
-"Analisando riscos jurídicos...",
-"Aplicando inteligência artificial...",
-"Finalizando análise..."
+const etapas=[
+"📄 Lendo contrato...",
+"🧠 Interpretando cláusulas...",
+"⚖️ Avaliando riscos jurídicos...",
+"🔍 Detectando problemas ocultos...",
+"✅ Finalizando análise..."
 ]
 
 async function analisar(){
 
-const botao=document.querySelector("button")
+const btn=document.querySelector("button")
 const bar=document.getElementById("bar")
 const progress=document.getElementById("progress")
-const textProgress=document.getElementById("progressText")
+const status=document.getElementById("status")
 const resultado=document.getElementById("resultado")
-
-try{
 
 let texto=document.getElementById("contrato").value.trim()
 let arquivo=document.getElementById("arquivo").files[0]
 
 if(!texto && !arquivo){
-alert("Envie ou cole um contrato")
+alert("Envie um contrato")
 return
 }
 
-botao.disabled=true
-botao.innerText="Analisando..."
+btn.disabled=true
+btn.innerText="Processando..."
 
 progress.style.display="block"
 
-// animação UX
-let etapa=0
+let step=0
 let interval=setInterval(()=>{
-bar.style.width=(etapa*20)+"%"
-textProgress.innerText=mensagens[etapa]
-etapa++
-if(etapa>=mensagens.length) clearInterval(interval)
-},700)
+status.innerText=etapas[step]
+bar.style.width=(step*20)+"%"
+step++
+if(step>=etapas.length) clearInterval(interval)
+},800)
 
 // leitura arquivo
 if(arquivo){
-
 const nome=arquivo.name.toLowerCase()
 
 if(nome.endsWith(".pdf")){
@@ -184,64 +236,70 @@ const buffer=await arquivo.arrayBuffer()
 const result=await mammoth.extractRawText({arrayBuffer:buffer})
 texto=result.value
 }
-
 }
 
 // limpeza
-texto = texto.replace(/\s+/g," ").trim()
+texto=texto.replace(/\s+/g," ").trim()
 
-// 🚨 CORREÇÃO DO TAMANHO
-if(texto.length > 12000){
-texto = texto.substring(0,12000)
-textProgress.innerText="Contrato muito grande, resumindo automaticamente..."
+// correção contrato grande
+if(texto.length>12000){
+texto=texto.substring(0,12000)
+status.innerText="⚠️ Contrato grande, otimizando análise..."
 }
 
-// envio
-const resposta=await fetch(
-"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
-{
+// envio API
+const res=await fetch("https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({ contrato:texto })
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({contrato:texto})
 })
 
-const dados=await resposta.json()
+const dados=await res.json()
 
 clearInterval(interval)
 bar.style.width="100%"
-textProgress.innerText="Análise concluída"
+status.innerText="🎯 Análise concluída"
 
 // resultado
-resultado.classList.add("fade")
 resultado.style.display="block"
 
 resultado.innerHTML=`
 
-<h3>Resultado</h3>
+<h3>Resultado da análise</h3>
 
 <p><b>Risco:</b> ${dados.risco}</p>
 
 <p>${dados.preview}</p>
 
-<div style="margin-top:20px;background:#0f172a;padding:15px;border-radius:8px;">
-<p><b>🔒 Conteúdo Premium</b></p>
-<p>Detectamos riscos ocultos importantes.</p>
+<div class="premium">
 
-<button style="background:#22c55e;width:100%;padding:15px;border:none;border-radius:8px;">
-Desbloquear análise completa
+<p class="alerta">
+🚨 Este contrato pode gerar prejuízo financeiro se assinado sem revisão.
+</p>
+
+<p><b>🔒 Identificamos cláusulas críticas ocultas</b></p>
+
+<ul>
+<li>✔ Cláusulas abusivas</li>
+<li>✔ Riscos jurídicos reais</li>
+<li>✔ Possível prejuízo financeiro</li>
+</ul>
+
+<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank" class="cta">
+<button>
+Ver riscos ocultos antes de assinar por R$29,90
 </button>
+</a>
+
+<p class="urgencia">
+⏳ Oferta válida apenas hoje
+</p>
+
 </div>
 `
 
-}catch(e){
-resultado.style.display="block"
-resultado.innerHTML="Erro ao analisar"
-}
-
-botao.disabled=false
-botao.innerText="Analisar"
+btn.disabled=false
+btn.innerText="Analisar contrato"
 
 }
 
