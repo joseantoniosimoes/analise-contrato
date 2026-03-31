@@ -4,117 +4,67 @@
 <meta charset="UTF-8">
 <title>Análise de Contrato com IA</title>
 
-<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 </script>
 
-<!-- WORD -->
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 
 <style>
-
-/* BASE */
-
 body{
-font-family: 'Segoe UI', Arial;
-background: linear-gradient(135deg, #0b1120, #0f172a);
+font-family:Arial, Helvetica, sans-serif;
+background:#0b1120;
 color:white;
 margin:0;
+padding:0;
 }
-
-/* CONTAINER */
-
 .container{
-max-width:1000px;
+max-width:900px;
 margin:auto;
-padding:50px 20px;
+padding:40px;
 text-align:center;
 }
-
-/* HERO */
-
-h1{
-font-size:42px;
-font-weight:700;
-margin-bottom:10px;
-}
-
-.sub{
-color:#94a3b8;
-font-size:20px;
-margin-bottom:20px;
-}
-
-.prova{
-color:#22c55e;
-font-weight:600;
-margin-bottom:40px;
-}
-
-/* BOX PRINCIPAL */
-
+h1{font-size:38px;margin-bottom:10px;}
+.sub{color:#9ca3af;font-size:18px;margin-bottom:20px;}
+.prova{color:#22c55e;font-weight:bold;margin-bottom:40px;}
 .box{
-background: rgba(17,24,39,0.8);
-backdrop-filter: blur(10px);
+background:#111827;
 padding:40px;
-border-radius:16px;
-box-shadow:0 10px 40px rgba(0,0,0,0.6);
+border-radius:12px;
+box-shadow:0 0 20px rgba(0,0,0,0.5);
 }
-
-/* INPUT */
-
 textarea{
 width:100%;
 height:180px;
-border-radius:10px;
-border:1px solid #1f2937;
+border-radius:8px;
+border:none;
 padding:15px;
 margin-top:15px;
-background:#020617;
+background:#1f2937;
 color:white;
 }
-
-/* FILE */
-
+.file-upload{margin-top:20px;}
+.file-upload input{display:none;}
 .file-label{
 display:inline-block;
 padding:14px 24px;
-background:#1f2937;
-border-radius:10px;
-cursor:pointer;
-margin-top:20px;
-transition:0.3s;
-}
-
-.file-label:hover{
 background:#374151;
+border-radius:8px;
+cursor:pointer;
 }
-
-/* BOTÃO PRINCIPAL */
-
 button{
-background: linear-gradient(90deg, #2563eb, #3b82f6);
+background:#2563eb;
 border:none;
-padding:18px 30px;
-border-radius:10px;
+padding:16px 28px;
+border-radius:8px;
 font-size:18px;
 color:white;
 margin-top:25px;
 cursor:pointer;
-transition:0.3s;
-font-weight:600;
 }
-
-button:hover{
-transform:scale(1.03);
-box-shadow:0 5px 20px rgba(59,130,246,0.4);
-}
-
-/* PROGRESS */
-
+button:disabled{opacity:0.6;}
 #progress{
 width:100%;
 background:#1f2937;
@@ -122,73 +72,38 @@ border-radius:10px;
 margin-top:20px;
 display:none;
 }
-
 #bar{
 height:12px;
 width:0%;
 background:#22c55e;
 border-radius:10px;
+transition:width 0.4s;
 }
-
-/* RESULTADO */
-
 #resultado{
 display:none;
 margin-top:40px;
-background:#020617;
+background:#1f2937;
 padding:30px;
-border-radius:12px;
+border-radius:10px;
 text-align:left;
-border:1px solid #1f2937;
 }
-
 .alerta{
 color:#facc15;
 font-weight:bold;
 font-size:22px;
+margin-bottom:15px;
 }
-
-/* CTA */
-
 .comprar{
-background: linear-gradient(90deg, #22c55e, #16a34a);
+background:#22c55e;
+margin-top:25px;
 width:100%;
 font-size:20px;
-margin-top:20px;
 }
-
-.comprar:hover{
-box-shadow:0 5px 20px rgba(34,197,94,0.4);
-}
-
-/* CARDS */
-
-.beneficios{
-margin-top:60px;
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:#020617;
-padding:25px;
-border-radius:12px;
-border:1px solid #1f2937;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-/* FOOTER */
-
 .footer{
 margin-top:60px;
-color:#64748b;
+color:#6b7280;
+font-size:14px;
 }
-
 </style>
 </head>
 
@@ -196,67 +111,205 @@ color:#64748b;
 
 <div class="container">
 
-<h1>Descubra riscos ocultos em contratos antes de assinar</h1>
+<h1>Análise Profissional de Contrato com IA</h1>
 
 <p class="sub">
-Análise jurídica com inteligência artificial em segundos
+Descubra riscos jurídicos antes de assinar qualquer contrato.
 </p>
 
 <p class="prova">
-✔ +2.300 contratos analisados
++2.300 contratos já analisados
 </p>
 
 <div class="box">
 
 <h2>Envie seu contrato</h2>
 
-<textarea id="contrato" placeholder="Cole aqui o texto..."></textarea>
+<textarea id="contrato" placeholder="Cole o contrato..."></textarea>
 
+<div class="file-upload">
 <label class="file-label">
-📄 Upload PDF ou Word
-<input type="file" id="arquivo" accept=".pdf,.doc,.docx" hidden>
+📄 Escolher arquivo
+<input type="file" id="arquivo" accept=".pdf,.doc,.docx">
 </label>
-
-<br>
+</div>
 
 <button onclick="analisar()">Analisar contrato</button>
 
-<div id="progress">
-<div id="bar"></div>
-</div>
+<div id="progress"><div id="bar"></div></div>
 
 <div id="resultado"></div>
 
 </div>
 
-<div class="beneficios">
-
-<div class="card">
-<h3>⚡ Rápido</h3>
-<p>Resultado em segundos</p>
-</div>
-
-<div class="card">
-<h3>🛡️ Seguro</h3>
-<p>Evite prejuízos jurídicos</p>
-</div>
-
-<div class="card">
-<h3>📊 Profissional</h3>
-<p>Análise clara e objetiva</p>
-</div>
-
-</div>
-
 <p class="footer">
-© 2026 J.Simões Software
+© 2026 J.Simões Engenharia de Software
 </p>
 
 </div>
 
 <script>
 
-// (mesma lógica anterior — não alterada para não quebrar)
+async function analisar(){
+
+const botao = document.querySelector("button")
+const bar = document.getElementById("bar")
+const progress = document.getElementById("progress")
+const resultado = document.getElementById("resultado")
+
+try{
+
+let texto=document.getElementById("contrato").value.trim()
+let arquivo=document.getElementById("arquivo").files[0]
+
+if(!texto && !arquivo){
+alert("Cole o contrato ou envie um arquivo")
+return
+}
+
+botao.disabled=true
+botao.innerText="Analisando..."
+
+progress.style.display="block"
+bar.style.width="15%"
+
+// leitura arquivo
+if(arquivo){
+
+const nome=arquivo.name.toLowerCase()
+
+if(nome.endsWith(".pdf")){
+const buffer=await arquivo.arrayBuffer()
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise
+
+let conteudo=""
+for(let i=1;i<=pdf.numPages;i++){
+const page=await pdf.getPage(i)
+const txt=await page.getTextContent()
+conteudo+=txt.items.map(i=>i.str).join(" ")+" "
+}
+
+texto=conteudo
+}
+
+if(nome.endsWith(".docx")){
+const buffer=await arquivo.arrayBuffer()
+const result=await mammoth.extractRawText({arrayBuffer:buffer})
+texto=result.value
+}
+
+if(nome.endsWith(".doc")){
+alert("Use .docx")
+return
+}
+
+}
+
+if(!texto || texto.length<20){
+alert("Não foi possível ler o contrato.")
+return
+}
+
+bar.style.width="50%"
+
+// envio
+const resposta=await fetch(
+"https://mctnbgrgnraixgwwvion.supabase.co/functions/v1/analisar-contrato",
+{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ contrato:texto })
+})
+
+const dados=await resposta.json()
+
+bar.style.width="100%"
+
+let risco=dados.risco || "MÉDIO"
+let preview=dados.preview || "Foram encontrados pontos de atenção."
+
+// 🔥 GATILHO INTELIGENTE
+let mensagemExtra=""
+
+if(risco==="BAIXO"){
+mensagemExtra="Mesmo com risco baixo, identificamos pontos que podem gerar problemas futuros."
+}
+if(risco==="MÉDIO"){
+mensagemExtra="Este contrato possui pontos de atenção que podem gerar riscos."
+}
+if(risco==="ALTO"){
+mensagemExtra="⚠️ Alto risco de prejuízo financeiro detectado."
+}
+
+// preview em lista
+let previewFormatado = preview
+.split(".")
+.filter(p=>p.trim().length>0)
+.slice(0,3)
+.map(p=>`<li>${p.trim()}.</li>`)
+.join("")
+
+resultado.style.display="block"
+
+resultado.innerHTML=`
+
+<p class="alerta">⚠️ Análise preliminar concluída</p>
+
+<p><b>Classificação de risco:</b> <span style="color:${risco==="ALTO"?"#ef4444":risco==="MÉDIO"?"#facc15":"#22c55e"};font-weight:bold">${risco}</span></p>
+
+<ul>${previewFormatado}</ul>
+
+<p style="color:#f87171;font-weight:bold;">
+${mensagemExtra}
+</p>
+
+<div style="background:#0f172a;padding:20px;border-radius:10px;margin-top:20px;">
+
+<p style="font-weight:bold;font-size:18px;">
+🔒 Conteúdo bloqueado
+</p>
+
+<p style="color:#9ca3af;">
+Detectamos cláusulas críticas que não podem ser exibidas gratuitamente.
+</p>
+
+<ul>
+<li>✔ Cláusulas abusivas detalhadas</li>
+<li>✔ Riscos jurídicos explicados</li>
+<li>✔ Possível prejuízo financeiro</li>
+<li>✔ Orientação antes de assinar</li>
+</ul>
+
+<a href="https://pay.kiwify.com.br/xEno6gD" target="_blank">
+<button class="comprar">
+Ver riscos ocultos antes de assinar por R$29,90
+</button>
+</a>
+
+<p style="color:#facc15;">⏳ Oferta por tempo limitado</p>
+<p style="font-size:13px;color:#6b7280;">
+Apenas hoje: acesso completo liberado
+</p>
+
+</div>
+
+`
+
+resultado.scrollIntoView({behavior:"smooth"})
+
+}catch(e){
+
+resultado.style.display="block"
+resultado.innerHTML=`<p class="alerta">Erro ao analisar contrato</p>`
+
+}finally{
+
+botao.disabled=false
+botao.innerText="Analisar contrato"
+
+}
+
+}
 
 </script>
 
